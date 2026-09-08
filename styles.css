@@ -1,4 +1,4 @@
-/* styles.css — iPad-first, minimal, touch-friendly */
+/* styles.css — iPad-first, improved layout for Thumbi */
 :root{
   --bg:#f7f3ef;
   --panel:#fff;
@@ -13,9 +13,11 @@ main#app{width:100%;max-width:920px;margin:0 auto;padding:12px;display:flex;flex
 .top h1{margin:0;font-size:1.25rem;color:var(--accent)}
 .controls button{margin-left:8px;padding:8px 10px;border-radius:10px;border:none;background:#fff;box-shadow:0 2px 6px rgba(16,24,40,0.08)}
 .stage{background:transparent;border-radius:14px;padding:12px;display:flex;align-items:center;justify-content:center;position:relative}
-#thumbiCanvas{background:linear-gradient(180deg,#fff8f9,#fff);border-radius:12px;touch-action:none}
+.canvasWrap{position:relative;width:360px;max-width:86vw}
+#thumbiCanvas{display:block;width:100%;height:auto;border-radius:12px;touch-action:none;background:linear-gradient(180deg,#fff8f9,#fff)}
+#loader{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;color:#666}
 .hud{position:absolute;left:12px;top:12px;display:flex;flex-direction:column;gap:6px}
-.meter{background:rgba(255,255,255,0.85);padding:6px 8px;border-radius:10px;box-shadow:0 4px 12px rgba(16,24,40,0.06);font-weight:600}
+.meter{background:rgba(255,255,255,0.95);padding:6px 8px;border-radius:10px;box-shadow:0 4px 12px rgba(16,24,40,0.06);font-weight:600}
 .actions{display:flex;gap:8px;justify-content:center}
 .actions button{flex:1;padding:12px;border-radius:12px;border:none;background:var(--accent);color:white;font-size:1rem}
 .panel{position:fixed;inset:12px;left:12px;right:12px;bottom:12px;top:90px;background:var(--panel);border-radius:14px;padding:12px;box-shadow:0 30px 60px rgba(16,24,40,0.15);display:flex;flex-direction:column}

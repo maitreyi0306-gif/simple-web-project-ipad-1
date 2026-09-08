@@ -19,7 +19,10 @@
     </header>
 
     <section class="stage" id="stage">
-      <canvas id="thumbiCanvas" width="240" height="240" aria-label="Thumbi the pet"></canvas>
+      <div class="canvasWrap">
+        <canvas id="thumbiCanvas" width="360" height="360" aria-label="Thumbi the pet"></canvas>
+        <div id="loader" class="loader">Loading Thumbi…</div>
+      </div>
       <div class="hud">
         <div class="meter">❤️ <span id="happiness">0</span></div>
         <div class="meter">⚡ <span id="energy">0</span></div>
