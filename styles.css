@@ -1,16 +1,37 @@
-/* styles.css — simple responsive styles */
+/* styles.css — iPad-first, minimal, touch-friendly */
 :root{
-  --bg:#f7f8fb;
-  --card:#fff;
-  --text:#111;
-  --accent:#2563eb;
+  --bg:#f7f3ef;
+  --panel:#fff;
+  --accent:#7c2a43; /* burgundy */
+  --muted:#6b7280;
 }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg),#efe9e6);color:#111;display:flex;align-items:stretch}
+main#app{width:100%;max-width:920px;margin:0 auto;padding:12px;display:flex;flex-direction:column;gap:12px}
+.top{display:flex;justify-content:space-between;align-items:center}
+.top h1{margin:0;font-size:1.25rem;color:var(--accent)}
+.controls button{margin-left:8px;padding:8px 10px;border-radius:10px;border:none;background:#fff;box-shadow:0 2px 6px rgba(16,24,40,0.08)}
+.stage{background:transparent;border-radius:14px;padding:12px;display:flex;align-items:center;justify-content:center;position:relative}
+#thumbiCanvas{background:linear-gradient(180deg,#fff8f9,#fff);border-radius:12px;touch-action:none}
+.hud{position:absolute;left:12px;top:12px;display:flex;flex-direction:column;gap:6px}
+.meter{background:rgba(255,255,255,0.85);padding:6px 8px;border-radius:10px;box-shadow:0 4px 12px rgba(16,24,40,0.06);font-weight:600}
+.actions{display:flex;gap:8px;justify-content:center}
+.actions button{flex:1;padding:12px;border-radius:12px;border:none;background:var(--accent);color:white;font-size:1rem}
+.panel{position:fixed;inset:12px;left:12px;right:12px;bottom:12px;top:90px;background:var(--panel);border-radius:14px;padding:12px;box-shadow:0 30px 60px rgba(16,24,40,0.15);display:flex;flex-direction:column}
+.panel.hidden{display:none}
+.chatHeader{display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;border-bottom:1px solid #eee}
+.chatLog{flex:1;overflow:auto;padding:8px}
+.chatLog .msg{margin:8px 0;padding:8px;border-radius:10px;background:#f3f4f6}
+.chatLog .pet{background:#fff0f6}
+#chatForm{display:flex;gap:8px;margin-top:8px}
+#chatForm input{flex:1;padding:10px;border-radius:10px;border:1px solid #eee}
+.memoryList{flex:1;overflow:auto;padding:6px}
+.memoryList .mem{background:#fff;padding:8px;border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.memoryActions{padding-top:8px}
+.footer{text-align:center;color:var(--muted);font-size:0.9rem}
 
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;padding:2rem;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-main{max-width:720px;margin:0 auto;text-align:center}
-.controls{display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:center;margin-top:1.25rem}
-button{padding:.6rem 1rem;font-size:1rem;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
-.notes{background:var(--card);padding:1rem;border-radius:12px;margin-top:1.5rem;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
-
-/* dark theme */
-body.dark{--bg:#0b1220;--card:#071021;--text:#e6eef8;--accent:#0ea5ff}
+/* larger touch targets on iPad */
+@media (min-width:720px){
+  .actions button{max-width:180px}
+}
