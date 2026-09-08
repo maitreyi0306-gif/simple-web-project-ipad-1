@@ -2,27 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Simple Web Project</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Thumbi — your iPad AI Pet</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <main>
-    <h1>Hello from your iPad web project!</h1>
-    <p>Tap the buttons below to see JavaScript in action.</p>
+  <main id="app">
+    <header class="top">
+      <h1>Thumbi</h1>
+      <div class="controls">
+        <button id="speechToggle">Speech: On</button>
+        <button id="soundsToggle">Sounds: On</button>
+        <button id="memoryBtn">Memories</button>
+      </div>
+    </header>
 
-    <div class="controls">
-      <button id="helloBtn">Say Hello</button>
-      <button id="countBtn">Count: <span id="count">0</span></button>
-      <button id="themeBtn">Toggle Theme</button>
-    </div>
-
-    <section class="notes">
-      <h2>Notes</h2>
-      <p>This is a tiny static site — it runs entirely in the browser. No server required.</p>
+    <section class="stage" id="stage">
+      <canvas id="thumbiCanvas" width="240" height="240" aria-label="Thumbi the pet"></canvas>
+      <div class="hud">
+        <div class="meter">❤️ <span id="happiness">0</span></div>
+        <div class="meter">⚡ <span id="energy">0</span></div>
+        <div class="meter">💕 <span id="affection">0</span></div>
+        <div class="meter">🎮 <span id="playfulness">0</span></div>
+      </div>
     </section>
+
+    <section class="actions">
+      <button id="petBtn">Pet</button>
+      <button id="playBtn">Play</button>
+      <button id="giftBtn">Gift</button>
+      <button id="talkBtn">Talk</button>
+    </section>
+
+    <section id="chatPanel" class="panel hidden">
+      <div class="chatHeader">Talk to Thumbi <button id="closeChat">Close</button></div>
+      <div id="chatLog" class="chatLog" aria-live="polite"></div>
+      <form id="chatForm">
+        <input id="chatInput" placeholder="Say something to Thumbi..." autocomplete="off" />
+        <button type="submit">Send</button>
+        <button id="rememberBtn" type="button">Remember</button>
+      </form>
+    </section>
+
+    <section id="memoryPanel" class="panel hidden">
+      <div class="chatHeader">Memories <button id="closeMemory">Close</button></div>
+      <div id="memoryList" class="memoryList"></div>
+      <div class="memoryActions">
+        <button id="clearMemories">Clear All</button>
+      </div>
+    </section>
+
+    <footer class="footer">Tip: Press & hold or drag across Thumbi to pet her. Repeated taps may annoy her playfully.</footer>
   </main>
 
+  <script>
+    // Configuration: use the image URL you provided if desired.
+    window.THUMBI_CONFIG = {
+      avatarUrl: "https://chatgpt.com/s/m_6a9fdda8b49881918b251000d87f4bfb",
+      speechDefault: true,
+      lang: 'en-US'
+    };
+  </script>
   <script src="script.js"></script>
 </body>
 </html>
