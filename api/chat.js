@@ -1,33 +1,43 @@
-// api/chat.js
-// Serverless endpoint (Vercel / Netlify-compatible) to proxy to OpenAI Chat API.
-// Deploy this function and set OPENAI_API_KEY in your environment variables.
-
-// Vercel (Node 18) exports default handler
+// api/chat.js — Vercel serverless function proxying to Anthropic
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  const body = req.body;
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return res.status(501).json({ error: 'OPENAI_API_KEY not configured on server' });
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'Method not allowed' });
+    return;
+  }
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) return res.status(500).json({ error: 'Missing ANTHROPIC_API_KEY' });
 
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const body = await (async () => {
+      try { return await req.json(); } catch (e) { return {}; }
+    })();
+    const userMessage = (body.message || body.prompt || '').toString().slice(0, 2000);
+
+    const payload = {
+      model: 'claude-sonnet-4-6',
+      messages: [{ role: 'user', content: userMessage }],
+      max_tokens_to_sample: 80
+    };
+
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${key}`,
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        model: body.model || 'gpt-4o-mini',
-        messages: body.messages || [{ role: 'user', content: body.message || '' }],
-        max_tokens: body.max_tokens || 300,
-        temperature: body.temperature || 0.9
-      })
+      body: JSON.stringify(payload)
     });
 
-    const data = await response.json();
-    return res.status(response.status).json(data);
+    if (!r.ok) {
+      const text = await r.text();
+      res.status(502).json({ error: 'Anthropic API error', detail: text });
+      return;
+    }
+
+    const data = await r.json();
+    const reply = (data?.choices?.[0]?.message?.content) || data?.result || JSON.stringify(data);
+    res.status(200).json({ choices: [{ message: { content: reply } }], raw: data });
   } catch (err) {
-    console.error('chat proxy error', err);
-    return res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: err.message });
   }
 }
