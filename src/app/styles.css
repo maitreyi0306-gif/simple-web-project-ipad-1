@@ -1,0 +1,12 @@
+:root{ --bg:#f7f3ef; --accent:#7c2a43; --muted:#6b7280 }
+*{box-sizing:border-box}
+html,body,#root{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+body{background:linear-gradient(180deg,var(--bg),#efe9e6);display:flex}
+.app{max-width:920px;margin:auto;padding:12px;width:100%}
+.header{display:flex;justify-content:space-between;align-items:center}
+.stage{margin-top:12px;display:flex;gap:12px}
+.canvasWrap{width:360px;height:360px;border-radius:12px;background:linear-gradient(180deg,#fff8f9,#fff);display:flex;align-items:center;justify-content:center;position:relative}
+.loader{position:absolute;color:#666}
+.statbars{flex:1}
+.actionbar{display:flex;gap:8px;margin-top:12px}
+button{padding:10px;border-radius:10px;border:none;background:var(--accent);color:white}

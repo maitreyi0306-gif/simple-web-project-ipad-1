@@ -1,73 +1,12 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Thumbi — your iPad AI Pet</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="manifest" href="manifest.json">
-</head>
-<body>
-  <main id="app">
-    <header class="top">
-      <h1>Thumbi</h1>
-      <div class="controls">
-        <button id="speechToggle">Speech: On</button>
-        <button id="soundsToggle">Sounds: On</button>
-        <button id="memoryBtn">Memories</button>
-      </div>
-    </header>
-
-    <section class="stage" id="stage">
-      <div class="canvasWrap">
-        <canvas id="thumbiCanvas" width="360" height="360" aria-label="Thumbi the pet"></canvas>
-        <div id="loader" class="loader">Loading Thumbi…</div>
-      </div>
-      <div class="hud">
-        <div class="meter">❤️ <span id="happiness">0</span></div>
-        <div class="meter">⚡ <span id="energy">0</span></div>
-        <div class="meter">💕 <span id="affection">0</span></div>
-        <div class="meter">🎮 <span id="playfulness">0</span></div>
-      </div>
-    </section>
-
-    <section class="actions">
-      <button id="petBtn">Pet</button>
-      <button id="playBtn">Play</button>
-      <button id="giftBtn">Gift</button>
-      <button id="talkBtn">Talk</button>
-    </section>
-
-    <section id="chatPanel" class="panel hidden">
-      <div class="chatHeader">Talk to Thumbi <button id="closeChat">Close</button></div>
-      <div id="chatLog" class="chatLog" aria-live="polite"></div>
-      <form id="chatForm">
-        <input id="chatInput" placeholder="Say something to Thumbi..." autocomplete="off" />
-        <button type="submit">Send</button>
-        <button id="rememberBtn" type="button">Remember</button>
-      </form>
-    </section>
-
-    <section id="memoryPanel" class="panel hidden">
-      <div class="chatHeader">Memories <button id="closeMemory">Close</button></div>
-      <div id="memoryList" class="memoryList"></div>
-      <div class="memoryActions">
-        <button id="clearMemories">Clear All</button>
-      </div>
-    </section>
-
-    <footer class="footer">Tip: Press & hold or drag across Thumbi to pet her. Repeated taps may annoy her playfully.</footer>
-  </main>
-
-  <script>
-    // Configuration: use the image file you uploaded to the repo as the reference avatar
-    // Detected uploaded file: /8C512FF5-A158-4A91-8B11-5C5991E36F2D.png
-    window.THUMBI_CONFIG = {
-      avatarUrl: "/8C512FF5-A158-4A91-8B11-5C5991E36F2D.png",
-      speechDefault: true,
-      lang: 'en-US'
-    };
-  </script>
-  <script src="script.js"></script>
-</body>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thumbi — Phase 1</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/app/main.tsx"></script>
+  </body>
 </html>
