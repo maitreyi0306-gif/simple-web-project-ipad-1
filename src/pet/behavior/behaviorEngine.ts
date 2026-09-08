@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { usePetStore } from '../state/petStore'
 import { moodEngine } from '../state/moodEngine'
+import { playSound } from '../../sound/soundManager'
 
 // Triggers type
 type Trigger = 'timer'|'tap'|'drag'|'repeated_tap'|'ignore'|'mood_change'|'random'
@@ -13,11 +14,11 @@ export function notifyIgnore(){ window.dispatchEvent(new CustomEvent('thumbi:tri
 
 // Weighted idle choices
 const idleChoices: { behavior: string; weight: number }[] = [
-  { behavior: 'idle', weight: 40 },
-  { behavior: 'wander', weight: 25 },
-  { behavior: 'stretch', weight: 10 },
-  { behavior: 'sit', weight: 10 },
-  { behavior: 'peek', weight: 10 }
+  { behavior: 'idle', weight: 35 },
+  { behavior: 'wander', weight: 30 },
+  { behavior: 'stretch', weight: 12 },
+  { behavior: 'sit', weight: 12 },
+  { behavior: 'peek', weight: 11 }
 ]
 
 function weightedPick<T extends { weight:number }>(arr:T[]){
@@ -58,10 +59,32 @@ export function useBehaviorEngine(){
     window.addEventListener('thumbi:trigger', onTrigger as EventListener)
 
     // periodic tick for idle randomness and mood-based transitions
+    const TICK_MS = 5000
     const tick = setInterval(()=>{
       if(!mounted) return
       handleTrigger('timer')
-    }, 5000) // tick every 5s for liveliness during testing
+    }, TICK_MS) // tick every 5s for liveliness during testing
+
+    // listen for visibility / focus to implement return behavior
+    function onVisibility(){
+      const state = get()
+      const last = state.lastInteractionAt || 0
+      const gap = Date.now() - last
+      // tiers: 2 min, 10 min, 1 hr
+      if(gap > 1000*60*60){
+        // long absence: big excited greeting
+        set({ behavior: 'dance', lastInteractionAt: Date.now(), stats: { ...state.stats, happiness: Math.min(100, state.stats.happiness + 8) } } as any)
+        playSound('surprise')
+      } else if(gap > 1000*60*10){
+        set({ behavior: 'dance', lastInteractionAt: Date.now(), stats: { ...state.stats, happiness: Math.min(100, state.stats.happiness + 5) } } as any)
+        playSound('happy_squeak')
+      } else if(gap > 1000*60*2){
+        set({ behavior: 'peek', lastInteractionAt: Date.now() } as any)
+        playSound('happy_squeak')
+      }
+    }
+    window.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'visible') onVisibility() })
+    window.addEventListener('focus', onVisibility)
 
     // also listen for store changes of stats to detect mood changes
     let lastMood = get().mood
@@ -71,6 +94,8 @@ export function useBehaviorEngine(){
       mounted = false
       clearInterval(tick)
       window.removeEventListener('thumbi:trigger', onTrigger as EventListener)
+      window.removeEventListener('visibilitychange', ()=>{})
+      window.removeEventListener('focus', ()=>{})
       unsub()
     }
 
@@ -81,39 +106,43 @@ export function useBehaviorEngine(){
 
       // High-priority interrupts
       if(trigger === 'repeated_tap'){
-        set({ behavior: 'run_away', lastInteractionAt: Date.now() })
+        // slightly lower happiness but respect floor
+        const s = state.stats
+        const newH = Math.max(30, s.happiness - 4)
+        set({ behavior: 'run_away', lastInteractionAt: Date.now(), stats: { ...s, happiness: newH } } as any)
+        playSound('annoyed_grumble')
         return
       }
       if(trigger === 'drag'){
-        set({ behavior: 'follow_finger', lastInteractionAt: Date.now() })
+        set({ behavior: 'follow_finger', lastInteractionAt: Date.now() } as any)
+        playSound('happy_squeak')
         return
       }
       if(trigger === 'tap'){
-        // simple stare then return
-        set({ behavior: 'stare', lastInteractionAt: Date.now() })
+        set({ behavior: 'stare', lastInteractionAt: Date.now() } as any)
+        playSound('happy_squeak')
         return
       }
 
-      // ignore triggers when sleeping except certain ones
+      // ignore behavior when sleeping
       if(current === 'sleep' && trigger !== 'tap' && trigger !== 'drag'){
-        // remain sleeping unless poked
         return
       }
 
       // Timer or random decisions
       if(trigger === 'timer' || trigger === 'random' || trigger === 'mood_change'){
-        // If sleepy, go to sleep
+        // If sleepy, go to sleep with some probability
         const mood = moodEngine(state.stats)
-        if(mood === 'sleepy' && Math.random() < 0.6){ set({ behavior: 'sleep' }); return }
+        if(mood === 'sleepy' && Math.random() < 0.6){ set({ behavior: 'sleep' } as any); playSound('sleepy_yawn'); return }
 
-        // weighted idle choices
+        // Weighted idle choices
         const pick = weightedPick(idleChoices)
         set({ behavior: pick.behavior as any })
         return
       }
 
-      // default fallback
-      set({ behavior: 'idle' })
+      // ignore default
+      set({ behavior: 'idle' } as any)
     }
 
   }, [])
