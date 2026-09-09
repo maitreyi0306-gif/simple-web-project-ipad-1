@@ -99,10 +99,18 @@
 
   async function handleChat(text) { appendPetMessage('Thinking...'); // try cloud endpoint
     try {
-      const resp = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text }) });
-      if (resp.ok) { const data = await resp.json(); const reply = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || data.result || JSON.stringify(data); appendPetMessage(reply); if (speechOn) speak(reply); return; }
-    } catch (e) { /* cloud unavailable */ }
-    const reply = localRespond(text); appendPetMessage(reply); if (speechOn) speak(reply);
+      const resp = await fetch('https://thumbi-2uxh.onrender.com/api/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    message: text,
+    mood: currentMood,
+    behavior: currentBehavior,
+    memories: memoryContext
+  })
+});
+const data = await resp.json();
+const reply = data.reply;
   }
 
   function localRespond(text) {
