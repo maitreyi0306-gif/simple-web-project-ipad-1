@@ -1,31 +1,19 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Thumbi — Preview</title>
-  <style>
-    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#f7f3ef}
-    .wrap{max-width:920px;margin:24px auto;padding:12px}
-    .loader{color:#666}
-    .hint{color:#444;margin-top:8px}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>Thumbi — Quick Preview</h1>
-    <div id="preview">If you see a blank page, please reload after a few seconds.</div>
-    <div class="hint">This is a static preview page that loads the in-repo script for quick CDN testing.</div>
-  </div>
-
-  <script>
-    // Keep the app backward-compatible for CDN preview by pointing to the uploaded image filename
-    window.THUMBI_CONFIG = {
-      avatarUrl: "/8C512FF5-A158-4A91-8B11-5C5991E36F2D.png",
-      speechDefault: true,
-      lang: 'en-US'
-    };
-  </script>
-  <script src="/script.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>Thumbi</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      window.THUMBI_CONFIG = {
+        avatarUrl: "/8C512FF5-A158-4A91-8B11-5C5991E36F2D.png",
+        speechDefault: true,
+        lang: 'en-US'
+      };
+    </script>
+    <script type="module" src="/src/app/main.tsx"></script>
+  </body>
 </html>
